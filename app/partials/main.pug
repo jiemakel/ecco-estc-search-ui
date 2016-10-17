@@ -1,0 +1,86 @@
+.row
+  form(action="{{$ctrl.searchURL}}",method="POST").col-md-4.col-lg-3
+    h2 Configuration
+      i.glyphicon.glyphicon-chevron-down(ng-click="config=!config",ng-init="config=true")
+    div(ng-show="config")
+      h3 Search fields
+      button.btn.btn-success(ng-click="$ctrl.selectAll('search','',true)") All
+      button.btn.btn-danger(ng-click="$ctrl.selectAll('search','',false)") None
+      h4 Metadata
+      button.btn.btn-sm.btn-success(ng-click="$ctrl.selectAll('search','metadata_',true)") All
+      button.btn.btn-sm.btn-danger(ng-click="$ctrl.selectAll('search','metadata_',false)") None
+      .checkbox-inline(ng-repeat="field in $ctrl.searchFields | filter:'metadata_'")
+        label
+          input(type="checkbox",name="f",value="{{field}}",ng-model="$ctrl.selectedSearchFields[field]")
+          | {{field.substring(9)}}
+      h4 Headings
+      button.btn.btn-sm.btn-success(ng-click="$ctrl.selectAll('search','heading_',true)") All
+      button.btn.btn-sm.btn-danger(ng-click="$ctrl.selectAll('search','heading_',false)") None
+      .checkbox-inline(ng-repeat="field in $ctrl.searchFields | filter:'heading_'")
+        label
+          input(type="checkbox",name="f",value="{{field}}",ng-model="$ctrl.selectedSearchFields[field]")
+          | {{field.substring(8)}}
+      h4 Contents
+      button.btn.btn-sm.btn-success(ng-click="$ctrl.selectAll('search','contents_',true)") All
+      button.btn.btn-sm.btn-danger(ng-click="$ctrl.selectAll('search','contents_',false)") None
+      .checkbox-inline(ng-repeat="field in $ctrl.searchFields | filter:'contents_'")
+        label
+          input(type="checkbox",name="f",value="{{field}}",ng-model="$ctrl.selectedSearchFields[field]")
+          | {{field.substring(9)}}
+      h3 Result fields
+      button.btn.btn-success(ng-click="$ctrl.selectAll('result','',true)") All
+      button.btn.btn-danger(ng-click="$ctrl.selectAll('result','',false)") None
+      h4 Metadata
+      button.btn.btn-sm.btn-success(ng-click="$ctrl.selectAll('result','metadata_',true)") All
+      button.btn.btn-sm.btn-danger(ng-click="$ctrl.selectAll('result','metadata_',false)") None
+      .checkbox-inline(ng-repeat="field in $ctrl.resultFields | filter:'metadata_'")
+        label
+          input(type="checkbox",name="rf",value="{{field}}",ng-model="$ctrl.selectedResultFields[field]")
+          | {{field.substring(9)}}
+      h4 Headings
+      button.btn.btn-sm.btn-success(ng-click="$ctrl.selectAll('result','heading_',true)") All
+      button.btn.btn-sm.btn-danger(ng-click="$ctrl.selectAll('result','heading_',false)") None
+      .checkbox-inline(ng-repeat="field in $ctrl.resultFields | filter:'heading_'")
+        label
+          input(type="checkbox",name="rf",value="{{field}}",ng-model="$ctrl.selectedResultFields[field]")
+          | {{field.substring(8)}}
+    h2 Search
+    .form-inline
+      .form-group
+        label Max edit distance
+        select(ng-model="maxDistance",ng-init="maxDistance='1'",ng-change="$ctrl.updateQuery(query,maxDistance,prefix)")
+          option(value="0") 0
+          option(value="1") 1
+          option(value="2") 2
+      .form-group
+        label Required common prefix length
+        input.form-control(type="number",ng-model="prefix",ng-init="prefix=1",ng-change="$ctrl.updateQuery(query,maxDistance,prefix)")
+      .checkbox
+        label
+          input(type="checkbox",ng-model="transpose")
+          | Transposition is a single edit
+    .form-group
+      label Query
+      input.form-control(type="text",ng-model="query",ng-change="$ctrl.updateQuery(query,maxDistance,prefix)",ng-model-options="{ debounce: 500 }")
+    h2 Keywords
+    script(type="text/ng-template",id="popover")
+    .checkbox-inline(ng-repeat="(queryWord,frequency) in $ctrl.queryWords")
+      input(type="checkbox",ng-model="$ctrl.selectedQueryWords[queryWord]")
+      label
+        span(ng-click="$ctrl.eccoSearch(queryWord)") {{queryWord}} ({{frequency}})
+    button.btn.btn-success(ng-click="$ctrl.addToQuery()") Add to Query
+    h2 Query
+    .form-inline
+      .form-group
+        label Required term frequency
+        input.form-control(type="number",ng-model="$ctrl.mf",ng-change="$ctrl.updateQueryURL()",name="mf")
+    textarea.form-control(rows="5",name="q",ng-model="$ctrl.query",ng-change="$ctrl.updateQueryURL()",ng-model-options="{debounce:1000}")
+    input.form-control(readonly,type="text",ng-model="$ctrl.queryURL")
+    div(ng-show="$ctrl.totalResults")
+      h3 Results
+      | ({{$ctrl.totalResults}} results)
+      table.table.table-condensed.table-bordered.table-striped
+        tr: th(ng-repeat="field in $ctrl.returnedResultFields") {{field}}
+        tr(ng-repeat="row in $ctrl.examples"): td(ng-repeat="value in row") {{value}}
+    input(ng-show="$ctrl.queryURL",type="submit").btn.btn-success
+  .col-md-8.col-lg-9: .embed-responsive.embed-responsive-4by3: iframe(ng-src="{{$ctrl.iframeSrc}}")

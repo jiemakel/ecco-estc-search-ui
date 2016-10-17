@@ -10,12 +10,12 @@ gulp.task('styles', function() {
     .pipe(gulp.dest(".tmp/styles"));
 });
 
-var tsProject = $.typescript.createProject('tsconfig.json',{typescript:require('typescript')});
+var tsProject = $.typescript.createProject('tsconfig.json');
 gulp.task('scripts', function() {
   return tsProject.src()
     .pipe($.plumber({ errorHandler: $.notify.onError("<%= error.stack %>") }))
     .pipe($.sourcemaps.init())
-    .pipe($.typescript(tsProject)).js
+    .pipe(tsProject()).js
     .pipe($.typescriptAngular({ moduleName: 'app' }))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest(".tmp"));
