@@ -81,6 +81,7 @@
       | ({{$ctrl.totalResults}} results)
       table.table.table-condensed.table-bordered.table-striped
         tr: th(ng-repeat="field in $ctrl.returnedResultFields") {{field}}
-        tr(ng-repeat="row in $ctrl.examples"): td(ng-repeat="value in row") {{value}}
+        tr(ng-repeat="row in $ctrl.examples"): td(ng-repeat="value in row")
+          span {{value}}
     input(ng-show="$ctrl.queryURL",type="submit").btn.btn-success
   .col-md-8.col-lg-9: .embed-responsive.embed-responsive-4by3: iframe(ng-src="{{$ctrl.iframeSrc}}")

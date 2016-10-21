@@ -14,8 +14,8 @@ gulp.task('dist:partials', function() {
 });
 
 gulp.task('dist:html', ['dist:partials'], function() {
-  var jsFilter = $.filter("**/*.js", {restore: true});
-  var cssFilter = $.filter("**/*.css", {restore: true});
+  var jsFilter = $.filter(".tmp/**/*.js", {restore: true});
+  var cssFilter = $.filter(".tmp/**/*.css", {restore: true});
   return gulp.src(".tmp/*.html")
     .pipe($.plumber({ errorHandler: $.notify.onError("<%= error.stack %>") }))
     .pipe($.print(function(path) { return "dist:html(1) " + path; }))
